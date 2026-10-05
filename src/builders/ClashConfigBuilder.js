@@ -452,21 +452,8 @@ export class ClashConfigBuilder extends BaseConfigBuilder {
         }
     }
 
-    addFallBackGroup(proxyList) {
-        const name = this.t('outboundNames.Fall Back');
-        if (this.hasProxyGroup(name)) return;
-        const proxies = this.buildSelectGroupMembers(proxyList);
-        const group = {
-            type: "select",
-            name,
-            proxies
-        };
-        // Add 'use' field if we have proxy-providers
-        const providerNames = this.getAllProviderNames();
-        if (providerNames.length > 0) {
-            group.use = providerNames;
-        }
-        this.config['proxy-groups'].push(group);
+    addFallBackGroup() {
+        // Clash terminates unmatched traffic with DIRECT, so a fallback selector would be redundant.
     }
 
     addCountryGroups() {
@@ -688,7 +675,7 @@ export class ClashConfigBuilder extends BaseConfigBuilder {
 
         this.config.rules = [
             ...ruleResults,
-            `MATCH,${this.t('outboundNames.Fall Back')}`
+            'MATCH,DIRECT'
         ];
 
         // Enable Clash UI (external controller/dashboard) when requested or when custom UI params are provided
